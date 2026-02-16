@@ -1,6 +1,8 @@
 package com.daoninhthai.aichatbot.controller;
 
 import com.daoninhthai.aichatbot.dto.request.CreateConversationRequest;
+import com.daoninhthai.aichatbot.dto.request.UpdateConversationRequest;
+import com.daoninhthai.aichatbot.dto.response.ConversationListResponse;
 import com.daoninhthai.aichatbot.dto.response.ConversationResponse;
 import com.daoninhthai.aichatbot.security.CustomUserDetails;
 import com.daoninhthai.aichatbot.service.ConversationService;
@@ -14,11 +16,12 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/conversations")
 @RequiredArgsConstructor
-@Tag(name = "Conversations", description = "Manage chat conversations")
+@Tag(name = "Conversations", description = "Manage chat conversations with full CRUD and history")
 public class ConversationController {
 
     private final ConversationService conversationService;
@@ -28,6 +31,13 @@ public class ConversationController {
     public ResponseEntity<List<ConversationResponse>> listConversations(
             @AuthenticationPrincipal CustomUserDetails userDetails) {
         return ResponseEntity.ok(conversationService.getUserConversations(userDetails.toUser()));
+    }
+
+    @GetMapping("/list")
+    @Operation(summary = "List conversations with last message preview and message count")
+    public ResponseEntity<List<ConversationListResponse>> listConversationsWithPreview(
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
+        return ResponseEntity.ok(conversationService.getUserConversationList(userDetails.toUser()));
     }
 
     @PostMapping
@@ -54,6 +64,35 @@ public class ConversationController {
             @Valid @RequestBody CreateConversationRequest request,
             @AuthenticationPrincipal CustomUserDetails userDetails) {
         return ResponseEntity.ok(conversationService.updateConversation(id, request, userDetails.toUser()));
+    }
+
+    @PatchMapping("/{id}")
+    @Operation(summary = "Partially update a conversation")
+    public ResponseEntity<ConversationResponse> patchConversation(
+            @PathVariable Long id,
+            @Valid @RequestBody UpdateConversationRequest request,
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
+        return ResponseEntity.ok(conversationService.patchConversation(id, request, userDetails.toUser()));
+    }
+
+    @PutMapping("/{id}/rename")
+    @Operation(summary = "Rename a conversation")
+    public ResponseEntity<ConversationResponse> renameConversation(
+            @PathVariable Long id,
+            @RequestBody Map<String, String> request,
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
+        String newTitle = request.get("title");
+        return ResponseEntity.ok(conversationService.renameConversation(id, newTitle, userDetails.toUser()));
+    }
+
+    @PutMapping("/{id}/pin")
+    @Operation(summary = "Pin or unpin a conversation")
+    public ResponseEntity<ConversationResponse> pinConversation(
+            @PathVariable Long id,
+            @RequestBody Map<String, Boolean> request,
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
+        boolean pinned = request.getOrDefault("pinned", true);
+        return ResponseEntity.ok(conversationService.pinConversation(id, pinned, userDetails.toUser()));
     }
 
     @DeleteMapping("/{id}")
