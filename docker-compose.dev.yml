@@ -1,0 +1,20 @@
+services:
+  postgres:
+    image: pgvector/pgvector:pg16
+    container_name: aichatbot-postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: aichatbot
+      POSTGRES_USER: aichatbot
+      POSTGRES_PASSWORD: aichatbot_dev
+    volumes:
+      - pgdata_dev:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U aichatbot"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  pgdata_dev:

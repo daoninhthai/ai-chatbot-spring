@@ -1,0 +1,40 @@
+### Java / Maven ###
+target/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+### IDE ###
+.idea/
+*.iws
+*.iml
+*.ipr
+.vscode/
+*.swp
+*.swo
+.project
+.classpath
+.settings/
+nbproject/
+out/
+build/
+
+### OS ###
+.DS_Store
+Thumbs.db
+
+### Environment ###
+.env
+*.env.local
+
+### Logs ###
+logs/
+*.log
+
+### Frontend ###
+frontend/node_modules/
+frontend/dist/
+frontend/.cache/
+
+### Docker ###
+docker-data/

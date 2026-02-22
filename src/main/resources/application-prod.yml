@@ -1,0 +1,9 @@
+spring:
+  jpa:
+    show-sql: false
+
+logging:
+  level:
+    com.daoninhthai.aichatbot: INFO
+    org.springframework.ai: WARN
+    root: WARN
