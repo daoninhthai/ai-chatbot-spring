@@ -8,6 +8,7 @@ import com.daoninhthai.aichatbot.repository.SharedConversationRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,7 +38,7 @@ public class ShareController {
 
         // Check expiration
         if (shared.getExpiresAt() != null && shared.getExpiresAt().isBefore(LocalDateTime.now())) {
-            return ResponseEntity.gone().build();
+            return ResponseEntity.status(HttpStatus.GONE).build();
         }
 
         // Increment view count

@@ -88,7 +88,7 @@ public class ContextWindowManager {
                 break;
             }
 
-            selected.addFirst(message);
+            selected.add(0, message);
             totalTokens += messageTokens;
         }
 
